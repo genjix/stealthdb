@@ -1,0 +1,4 @@
+$ dd if=/dev/urandom of=db bs=10M count=5
+$ ./make.sh
+$ ./stealth
+
