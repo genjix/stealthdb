@@ -62,8 +62,8 @@ void stealth_database::sync(uint32_t block_height)
 }
 void stealth_database::add_header_entry_index(uint32_t block_height)
 {
-    uint64_t offset = header_sector_ +
-        (block_height / block_page_interval) * 4;
+    uint32_t interval = block_height / block_page_interval;
+    uint64_t offset = header_sector_ + interval * 4;
     uint8_t* iter = file_.data() + offset;
     auto serial = make_serializer(iter);
     serial.write_4_bytes(entries_count_);

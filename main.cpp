@@ -107,7 +107,7 @@ int main()
                 stealth_data.clear();
             }
         }
-        i += 20;
+        i += 50;
         db.sync(i);
     }
 
