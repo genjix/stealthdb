@@ -35,16 +35,6 @@ void initialize_new(const std::string& filename)
         serial.write_4_bytes(0);
 }
 
-bool is_stealth_script(const operation_stack& ops)
-{
-    return ops.size() == 2 &&
-        ops[0].code == opcode::return_ &&
-        ops[1].code == opcode::special &&
-        ops[1].data.size() == 1 + 4 + 33 &&
-        ops[1].data[0] == 0x06 &&
-        (ops[1].data[5] == 0x02 || ops[1].data[5] == 0x03);
-}
-
 int main()
 {
     initialize_new("stealth.db");
@@ -84,7 +74,7 @@ int main()
         stealth_data2 = &stealth_data;
         for (const auto& output: tx.outputs)
         {
-            if (is_stealth_script(output.script.operations()))
+            if (output.script.type() == payment_type::stealth_info)
             {
                 stealth_data = output.script.operations()[1].data;
                 continue;
