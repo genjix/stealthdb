@@ -12,8 +12,19 @@ struct stealth_result_row
     hash_digest transaction_id;
 };
 
-void initialize_new(mmfile& file)
+void create_file(const std::string& filename, size_t filesize)
 {
+    std::ofstream file(filename, std::ios::binary | std::ios::trunc);
+    constexpr size_t chunk_size = 100000;
+    std::vector<char> random_buffer(chunk_size);
+    for (size_t i = 0; i < filesize; i += chunk_size)
+        file.write(random_buffer.data(), chunk_size);
+}
+
+void initialize_new(const std::string& filename)
+{
+    create_file(filename, 100000000);
+    mmfile file(filename);
     auto serial = make_serializer(file.data());
     serial.write_4_bytes(1);
     // should last us a decade
@@ -36,8 +47,8 @@ bool is_stealth_script(const operation_stack& ops)
 
 int main()
 {
-    mmfile file("db");
-    initialize_new(file);
+    initialize_new("stealth.db");
+    mmfile file("stealth.db");
     stealth_database db(file);
     auto write_func = [](uint8_t* it)
     {
@@ -115,7 +126,7 @@ int main()
     {
         constexpr uint32_t row_size = 4 + 33 + 21 + 32;
         auto deserial = make_deserializer(it, it + row_size);
-        uint32_t bitfield = deserial.read_4_bytes();
+        data_chunk bitfield = deserial.read_data(4);
         data_chunk ephemkey = deserial.read_data(33);
         uint8_t version = deserial.read_byte();
         short_hash hash = deserial.read_short_hash();

@@ -2,15 +2,9 @@
 #define STEALTH_DATABASE_HPP
 
 #include <functional>
-#include "mmfile.hpp"
+#include <bitcoin/utility/mmfile.hpp>
 
 namespace libbitcoin {
-
-struct stealth_prefix
-{
-    uint8_t number_bits;
-    uint32_t bitfield;
-};
 
 class stealth_database
 {
