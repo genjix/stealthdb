@@ -1,16 +1,7 @@
-#include "stealth_database.hpp"
+#include <bitcoin/bitcoin.hpp>
 using namespace libbitcoin;
 
-#include <bitcoin/bitcoin.hpp>
-
 #include "txs.hpp"
-
-struct stealth_result_row
-{
-    data_chunk ephemkey;
-    payment_address address;
-    hash_digest transaction_id;
-};
 
 void create_file(const std::string& filename, size_t filesize)
 {
